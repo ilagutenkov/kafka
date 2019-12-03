@@ -1,0 +1,4 @@
+
+app:
+  kafka:
+    servers: localhost:9092
