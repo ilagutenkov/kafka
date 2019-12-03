@@ -22,12 +22,12 @@ class StreamStateService(val kafkaConfig: KafkaConfig, val countTable: KTable<St
         Runtime.getRuntime().addShutdownHook(Thread(Runnable { streams.close() }))
     }
 
-    fun getValueByKey(key: String) {
+    fun getValueByKey(key: String):Long {
         val streams=kafkaConfig.streams()
 
         val queryableStoreName = countTable.queryableStoreName() // returns null if KTable is not queryable
         val view = streams.store(queryableStoreName, QueryableStoreTypes.keyValueStore<String, Long>())
-        view.get(key)
+        return view.get(key)
     }
 
 }

@@ -1,8 +1,6 @@
 package com.example.kafka.api
 
-import com.example.kafka.config.utils.TEST_OUT_TOPIC
 import com.example.kafka.service.StreamStateService
-import org.apache.kafka.streams.kstream.KTable
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,14 +15,9 @@ class QueryController(val stateService: StreamStateService) {
 
 
     @GetMapping
-    fun keysCountTable(@RequestParam key:String) {
-        log.info("keysCountTable")
-
-        stateService.getValueByKey(key)
-
+    fun keysCountTable(@RequestParam key: String): Long {
+        return stateService.getValueByKey(key)
     }
 
-//    @GetMapping("/send")
-//    fun tableToTopic(@RequestParam(required = false, defaultValue = TEST_OUT_TOPIC) topic: String) = countTable.toStream().to(topic)
 
 }
