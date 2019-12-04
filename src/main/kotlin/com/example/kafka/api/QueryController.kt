@@ -15,8 +15,8 @@ class QueryController(val stateService: StreamStateService) {
 
 
     @GetMapping
-    fun keysCountTable(@RequestParam key: String): Long {
-        return stateService.getValueByKey(key)
+    fun keysCountTable(@RequestParam key: String): Long? {
+        return stateService.getValueByKeyFromTest(key)
     }
 
 

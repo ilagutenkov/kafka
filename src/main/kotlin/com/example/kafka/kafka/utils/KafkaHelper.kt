@@ -1,4 +1,4 @@
-package com.example.kafka.config.utils
+package com.example.kafka.kafka.utils
 
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -6,15 +6,16 @@ import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerde
 import java.util.*
 
+const val STORE_NAME = "aggregated-table-store"
 const val TEST_TOPIC = "test"
-const val TEST_OUT_TOPIC = "out-test"
+const val JOIN_TOPIC = "join-topic-test"
 
 fun getStreamsConfiguration(bootstrapServers: String): Properties {
     val streamsConfiguration = Properties()
     // Give the Streams application a unique name.  The name must be unique in the Kafka cluster
     // against which the application is run.
-    streamsConfiguration[StreamsConfig.APPLICATION_ID_CONFIG] = "wordcount-lambda-example"
-    streamsConfiguration[StreamsConfig.CLIENT_ID_CONFIG] = "wordcount-lambda-example-client"
+    streamsConfiguration[StreamsConfig.APPLICATION_ID_CONFIG] = "valuecount-lambda-example"
+    streamsConfiguration[StreamsConfig.CLIENT_ID_CONFIG] = "valuecount-lambda-example-client"
     // Where to find Kafka broker(s).
     streamsConfiguration[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
     // Specify default (de)serializers for record keys and for record values.
