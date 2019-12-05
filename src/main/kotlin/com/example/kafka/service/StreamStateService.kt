@@ -2,6 +2,7 @@ package com.example.kafka.service
 
 import com.example.kafka.kafka.StreamTypes
 import com.example.kafka.kafka.StreamsFactory
+import org.apache.kafka.streams.state.QueryableStoreTypes
 import org.springframework.stereotype.Service
 
 
@@ -9,7 +10,13 @@ import org.springframework.stereotype.Service
 class StreamStateService(val streamsFactory: StreamsFactory) {
 
     fun getValueByKeyFromTest(key: String): Long? {
-        val view = streamsFactory.getView(StreamTypes.TEST)
+        return getValueByKey(StreamTypes.TEST, key)
+    }
+
+    private fun getValueByKey(streamType: StreamTypes, key: String): Long? {
+        val streams = streamsFactory.getStreams(streamType)
+        val view = streams?.store(streamType.storeName, QueryableStoreTypes.keyValueStore<String, Long>())
+
         return view?.get(key)
     }
 

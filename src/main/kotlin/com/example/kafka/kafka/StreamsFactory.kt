@@ -11,8 +11,6 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Materialized
 import org.apache.kafka.streams.state.KeyValueStore
-import org.apache.kafka.streams.state.QueryableStoreTypes
-import org.apache.kafka.streams.state.ReadOnlyKeyValueStore
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
@@ -22,7 +20,8 @@ class StreamsFactory(val kafkaConfig: KafkaConfig) {
 
     val log = LoggerFactory.getLogger(this::class.java)
     lateinit var servers: String
-    lateinit var viewMap: MutableMap<StreamTypes, ReadOnlyKeyValueStore<String, Long>>
+    lateinit var streams: KafkaStreams
+    val streamsMap=HashMap<StreamTypes,KafkaStreams>()
 
     @PostConstruct
     fun init() {
@@ -32,7 +31,7 @@ class StreamsFactory(val kafkaConfig: KafkaConfig) {
 
         val topicStream = builder.stream<String, Json>(TEST_TOPIC)
 
-        val table = topicStream
+       /* val table =*/ topicStream
                 .filter { key, value -> value.get("value").asInt() > 5 }
                 .peek { key, value -> log.info("processing key {}. value {}", key, value) }
                 .groupByKey()
@@ -40,19 +39,16 @@ class StreamsFactory(val kafkaConfig: KafkaConfig) {
                         .withValueSerde(Serdes.Long()))
 
         val streams = KafkaStreams(builder.build(), getStreamsConfiguration(servers))
+        streamsMap[StreamTypes.TEST] = streams
+
         streams.cleanUp()
 
         streams.start()
 
         // Add shutdown hook to respond to SIGTERM and gracefully close the Streams application.
         Runtime.getRuntime().addShutdownHook(Thread(Runnable { streams.close() }))
-
-        val queryableStoreName = table.queryableStoreName() // returns null if KTable is not queryable
-        val view = streams.store(queryableStoreName, QueryableStoreTypes.keyValueStore<String, Long>())
-
-        viewMap[StreamTypes.TEST] = view
     }
 
-    fun getView(type: StreamTypes) = viewMap[type]
+    fun getStreams(type: StreamTypes)=streamsMap[type]
 
 }
