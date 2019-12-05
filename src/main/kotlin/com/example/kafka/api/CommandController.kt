@@ -1,6 +1,6 @@
 package com.example.kafka.api
 
-import com.example.kafka.config.utils.TEST_TOPIC
+import com.example.kafka.kafka.utils.TEST_TOPIC
 import com.example.kafka.service.KafkaSendingService
 import finch.json.Json
 import org.springframework.web.bind.annotation.GetMapping

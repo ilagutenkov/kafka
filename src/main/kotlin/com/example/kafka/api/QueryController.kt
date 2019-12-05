@@ -14,9 +14,9 @@ class QueryController(val stateService: StreamStateService) {
     val log = LoggerFactory.getLogger(this.javaClass)
 
 
-    @GetMapping
-    fun keysCountTable(@RequestParam key: String): Long {
-        return stateService.getValueByKey(key)
+    @GetMapping("/test")
+    fun keysCountTable(@RequestParam key: String): Long? {
+        return stateService.getValueByKeyFromTest(key)
     }
 
 

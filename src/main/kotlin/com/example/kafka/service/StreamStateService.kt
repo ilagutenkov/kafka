@@ -1,33 +1,23 @@
 package com.example.kafka.service
 
-import com.example.kafka.config.KafkaConfig
-import org.apache.kafka.streams.KafkaStreams
-import org.apache.kafka.streams.kstream.KTable
+import com.example.kafka.kafka.StreamTypes
+import com.example.kafka.kafka.StreamsFactory
 import org.apache.kafka.streams.state.QueryableStoreTypes
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
 
 
 @Service
-class StreamStateService(val kafkaConfig: KafkaConfig, val countTable: KTable<String, Long>) {
+class StreamStateService(val streamsFactory: StreamsFactory) {
 
-    @PostConstruct
-    fun init(){
-        var streams=kafkaConfig.streams()
-        streams.cleanUp()
-
-        streams.start()
-
-        // Add shutdown hook to respond to SIGTERM and gracefully close the Streams application.
-        Runtime.getRuntime().addShutdownHook(Thread(Runnable { streams.close() }))
+    fun getValueByKeyFromTest(key: String): Long? {
+        return getValueByKey(StreamTypes.TEST, key)
     }
 
-    fun getValueByKey(key: String):Long {
-        val streams=kafkaConfig.streams()
+    private fun getValueByKey(streamType: StreamTypes, key: String): Long? {
+        val streams = streamsFactory.getStreams(streamType)
+        val view = streams?.store(streamType.storeName, QueryableStoreTypes.keyValueStore<String, Long>())
 
-        val queryableStoreName = countTable.queryableStoreName() // returns null if KTable is not queryable
-        val view = streams.store(queryableStoreName, QueryableStoreTypes.keyValueStore<String, Long>())
-        return view.get(key)
+        return view?.get(key)
     }
 
 }
