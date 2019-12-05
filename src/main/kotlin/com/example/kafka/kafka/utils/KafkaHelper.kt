@@ -8,14 +8,25 @@ import java.util.*
 
 const val STORE_NAME = "aggregated-table-store"
 const val TEST_TOPIC = "test"
-const val JOIN_TOPIC = "join-topic-test"
+const val PLAYER_TOPIC = "player"
+const val MATCH_EVENT_TOPIC = "match_event"
+const val PLAYER_EVENT_TOPIC = "player_event"
 
-fun getStreamsConfiguration(bootstrapServers: String): Properties {
+
+const val TEST_APP="test-app"
+const val TEST_CLIENT="test-client"
+const val PLAYER_APP="player-app"
+const val PLAYER_CLIENT="player-client"
+
+const val MATCH_APP="match-app"
+const val MATCH_CLIENT="match-clie"
+
+fun getStreamsConfiguration(bootstrapServers: String, applicationName: String, client: String): Properties {
     val streamsConfiguration = Properties()
     // Give the Streams application a unique name.  The name must be unique in the Kafka cluster
     // against which the application is run.
-    streamsConfiguration[StreamsConfig.APPLICATION_ID_CONFIG] = "valuecount-lambda-example"
-    streamsConfiguration[StreamsConfig.CLIENT_ID_CONFIG] = "valuecount-lambda-example-client"
+    streamsConfiguration[StreamsConfig.APPLICATION_ID_CONFIG] = applicationName
+    streamsConfiguration[StreamsConfig.CLIENT_ID_CONFIG] = client
     // Where to find Kafka broker(s).
     streamsConfiguration[StreamsConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
     // Specify default (de)serializers for record keys and for record values.

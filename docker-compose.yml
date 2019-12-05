@@ -14,6 +14,14 @@ services:
     depends_on:
       - zookeeper
     environment:
+      KAFKA_CREATE_TOPICS: "player:1:1:compact,match_event:1:1,player_event:1:1"
+      LOG_CLEANER_ENABLE: "true"
+      LOG_CLEANUP_POLICY: "compact"
+      LOG_CLEANER_MIN_COMPACTION_LAG_MS: 100
+      LOG_CLEANER_MAX_COMPACTION_LAG_MS: 1000
+      DELETE_RETENTION_MS: 10000
+#      KAFKA_LOG_RETENTION_MS: 1000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 1000
       KAFKA_BROKER_ID: 1
       KAFKA_PORT: 9092
       KAFKA_ADVERTISED_HOST_NAME: "kafka"
